@@ -1,5 +1,5 @@
 FROM srhopkins/tomcat7:base
-MAINTAINER srhopkin@apollo.edu
+MAINTAINER srhopkins@gmail.com
 
 EXPOSE 8080
 
