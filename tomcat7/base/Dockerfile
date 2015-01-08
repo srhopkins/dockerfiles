@@ -4,7 +4,7 @@ MAINTAINER srhopkin@apollo.edu
 EXPOSE 8080
 
 RUN yum -y upgrade # update
-RUN yum -y install wget tar
+RUN yum -y install wget tar openssh-clients
 
 # Install jdk
 RUN wget --no-cookies \
