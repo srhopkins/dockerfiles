@@ -14,15 +14,10 @@ int2ip = lambda n: socket.inet_ntoa(struct.pack('!I', n))
 with open('/etc/hosts') as f:
     lo_used = map( ip2int, re.findall( r'127\.[0-9]+(?:\.[0-9]+){2}', ''.join(f.readlines())) )
 
-for filename in glob.glob('/etc/hosts.d/*'):
-    with open(filename) as f:
-        los = map( ip2int, re.findall( r'127\.[0-9]+(?:\.[0-9]+){2}', ''.join(f.readlines())) )
-        lo_used += los
-
 def new_lo(s):
     return s + 1 if s + 1 not in lo_used else new_lo(s+1)
     
-def make_script(json_file):
+def make_script(json_file, scriptname):
     tunnels_json = json.load(open(json_file))
     tunnel_sh = '#!/usr/bin/env bash\n# AUTO GENERATED from %(scriptname)s (source: %(json_file)s)\n\n' % vars()
     hosts_append = '\n# GENERATED FROM %(scriptname)s (source: %(json_file)s)\n' % vars()
@@ -30,7 +25,7 @@ def make_script(json_file):
     if "opts" in tunnels_json.keys():
         tunnel_sh += 'ssh %(opts)s \\\n' % tunnels_json
     else:
-        tunnel_sh += 'ssh -M -S %(json_file)s.socket -fnNT \\\n' % vars()
+        tunnel_sh += 'ssh -M -S %s.socket -fnNT \\\n' % ''.join(json_file.split('.')[:-1])
         
     if "identity_file" in tunnels_json:
         tunnel_sh += "\t-i %(identity_file)s \\\n" % tunnels_json
@@ -51,9 +46,10 @@ def make_script(json_file):
 
 
 # Do the work
-for json_file in glob.glob("*.json"):
-    script, hosts = make_script(json_file)
-    with open('.'.join(json_file.split('.')[:-1])+'.sh', 'w') as f:
+for json_file in glob.glob("/tunnels/*.json"):
+    script, hosts = make_script(json_file, scriptname)
+    fname = '.'.join(os.path.basename(json_file).split('.')[:-1])
+    with open('/tunnels/%s.sh' % fname, 'w') as f:
         f.write(script)
-    with open('hosts', 'a') as f:
+    with open('/etc/hosts.d/%s.hosts' % fname, 'w') as f:
         f.write(hosts)
