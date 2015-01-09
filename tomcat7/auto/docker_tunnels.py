@@ -45,7 +45,7 @@ def make_script(json_file, scriptname):
         lo_used.append(seed)
         lo = int2ip(seed)
         for port in hosts[tunnel]:
-            tunnel_sh += "\t-L %(lo)s:%(port)s:%(tunnel)s \\\n" % vars()
+            tunnel_sh += "\t-L %(lo)s:%(port)s:%(tunnel)s:%(port)s \\\n" % vars()
         hosts_append += "%(lo)s\t%(tunnel)s\n" % vars()
 
     tunnel_sh += '\t%(user)s@%(jump_gateway)s' % tunnels_json
