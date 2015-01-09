@@ -5,6 +5,7 @@ import glob
 import json
 import struct
 import socket
+from collections import defaultdict
 
 scriptname = os.path.basename(__file__)
 
@@ -20,7 +21,7 @@ def new_lo(s):
 def make_script(json_file, scriptname):
     tunnels_json = json.load(open(json_file))
     tunnel_sh = '#!/usr/bin/env bash\n# AUTO GENERATED from %(scriptname)s (source: %(json_file)s)\n\n' % vars()
-    hosts_append = '\n# GENERATED FROM %(scriptname)s (source: %(json_file)s)\n' % vars()
+    hosts_append = '# GENERATED FROM %(scriptname)s (source: %(json_file)s)\n' % vars()
 
     if "opts" in tunnels_json.keys():
         tunnel_sh += 'ssh %(opts)s \\\n' % tunnels_json
@@ -30,14 +31,22 @@ def make_script(json_file, scriptname):
     if "identity_file" in tunnels_json:
         tunnel_sh += "\t-i %(identity_file)s \\\n" % tunnels_json
 
-    seed = ip2int('127.0.0.1')
+    hosts = defaultdict(list)
+    ordered = []
     for tunnel in tunnels_json["tunnels"]:
+        host, port = tunnel.split(':')
+        hosts[host].append(port)
+        if host not in ordered:
+            ordered.append(host)
+
+    seed = ip2int('127.0.0.1')
+    for tunnel in ordered:
         seed = new_lo(seed)
         lo_used.append(seed)
         lo = int2ip(seed)
-        host, port = tunnel.split(":")
-        tunnel_sh += "\t-L %(lo)s:%(port)s:%(tunnel)s \\\n" % vars()
-        hosts_append += "%(host)s\t%(lo)s\n" % vars()
+        for port in hosts[tunnel]:
+            tunnel_sh += "\t-L %(lo)s:%(port)s:%(tunnel)s \\\n" % vars()
+        hosts_append += "%(lo)s\t%(tunnel)s\n" % vars()
 
     tunnel_sh += '\t%(user)s@%(jump_gateway)s' % tunnels_json
         
