@@ -14,6 +14,11 @@ int2ip = lambda n: socket.inet_ntoa(struct.pack('!I', n))
 with open('/etc/hosts') as f:
     lo_used = map( ip2int, re.findall( r'127\.[0-9]+(?:\.[0-9]+){2}', ''.join(f.readlines())) )
 
+for filename in glob.glob('/etc/hosts.d/*'):
+    with open(filename) as f:
+        los = map( ip2int, re.findall( r'127\.[0-9]+(?:\.[0-9]+){2}', ''.join(f.readlines())) )
+        lo_used += los
+
 def new_lo(s):
     return s + 1 if s + 1 not in lo_used else new_lo(s+1)
     
@@ -25,7 +30,7 @@ def make_script(json_file):
     if "opts" in tunnels_json.keys():
         tunnel_sh += 'ssh %(opts)s \\\n' % tunnels_json
     else:
-        tunnel_sh += 'ssh -M -S my-ctrl-socket -fnNT \\\n'
+        tunnel_sh += 'ssh -M -S %(json_file)s.socket -fnNT \\\n' % vars()
         
     if "identity_file" in tunnels_json:
         tunnel_sh += "\t-i %(identity_file)s \\\n" % tunnels_json
