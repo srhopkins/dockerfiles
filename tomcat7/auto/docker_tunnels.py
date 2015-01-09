@@ -15,6 +15,11 @@ int2ip = lambda n: socket.inet_ntoa(struct.pack('!I', n))
 with open('/etc/hosts') as f:
     lo_used = map( ip2int, re.findall( r'127\.[0-9]+(?:\.[0-9]+){2}', ''.join(f.readlines())) )
 
+for hosts in glob.glob('/etc/hosts.d/*'):
+    with open(hosts) as f:
+        los = map( ip2int, re.findall( r'127\.[0-9]+(?:\.[0-9]+){2}', ''.join(f.readlines())) )
+    lo_used += los
+
 def new_lo(s):
     return s + 1 if s + 1 not in lo_used else new_lo(s+1)
     

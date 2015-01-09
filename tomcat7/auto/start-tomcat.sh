@@ -12,7 +12,12 @@ if [ -d /tunnels ]; then
 	for script in /tunnels/*.sh; do
 		$script
 	done
+fi
+
+if [ -d /hosts -o -d /tunnels ]; then
 	/etc/init.d/dnsmasq start
+	resolv=$(egrep '(^nameserver|^search)' /etc/resolv.conf)
+        echo -e "nameserver 127.0.0.1\n$resolv" > /etc/resolv.conf
 fi
 
 if [ -f /deployment/init.sh ];
