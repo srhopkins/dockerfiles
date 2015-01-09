@@ -4,8 +4,11 @@ MAINTAINER srhopkins@gmail.com
 EXPOSE 8080
 
 RUN yum -y upgrade # update
-RUN yum -y install wget tar openssh-clients
+RUN yum -y install wget tar openssh-clients dnsmasq
 
+RUN echo 'user=root' > /etc/dnsmasq.conf
+RUN echo 'addn-hosts=/etc/hosts.d' >> /etc/dnsmasq.conf
+	
 # Install jdk
 RUN wget --no-cookies \
 	--no-check-certificate \
