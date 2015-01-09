@@ -1,5 +1,19 @@
 #!/bin/sh
 
+# Copy all user defined hosts into dnsmasq hosts directory /etc/hosts.d
+if [ -d /hosts ]; then
+	cp /hosts/* /etc/hosts.d
+fi
+
+# Generate and run user tunnels/gateways/jumps
+if [ -d /tunnels ]; then
+	/opt/docker_tunnels.py
+	chmod +x /tunnels/*.sh
+	for script in /tunnels/*.sh; do
+		$script
+	done
+	/etc/init.d/dnsmasq start
+fi
 
 if [ -f /deployment/init.sh ];
 then
@@ -31,7 +45,7 @@ fi
 /usr/share/apache-tomcat-7.0.57/bin/startup.sh
 
 #Override the exit command to prevent accidental container distruction 
-echo 'alias exit="echo Are you sure? this will kill the container. use Ctrl + p, Ctrl + q to detach or ctrl + d to exit"' > ~/.bashrc
+#echo 'alias exit="echo Are you sure? this will kill the container. use Ctrl + p, Ctrl + q to detach or ctrl + d to exit"' > ~/.bashrc
 
 #Run bash to keep container running and provide interactive mode
-bash
+#bash
