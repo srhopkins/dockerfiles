@@ -9,6 +9,7 @@ RUN yum -y install wget tar openssh-clients dnsmasq
 # Config dnsmasq and protect resolv.conf
 RUN echo 'user=root' > /etc/dnsmasq.conf
 RUN echo 'addn-hosts=/etc/hosts.d' >> /etc/dnsmasq.conf
+RUN mkdir /etc/hosts.d
 RUN echo 'nohook resolv.conf' >> /etc/dhcpcd.conf
 
 # Install jdk
