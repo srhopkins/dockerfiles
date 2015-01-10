@@ -13,7 +13,7 @@ tag: auto
 ---
 Simplest incantation
 
-    docker run -it -p 8080:8080 srhopkins/tomcat7:auto
+     docker run -it -p 8080:8080 srhopkins/tomcat7:auto
 
 Full bells
 
@@ -23,7 +23,7 @@ Full bells
 	     -v `pwd`/tunnels:/tunnels \
 	     srhopkins/tomcat7:auto
 
-Sample `/tunnels/tunnel_name.json`
+Sample `/tunnels/tunnel_name.json`: file name must end in `.json`
 
     {
         "jump_gateway": "jump.mydomain.com",
@@ -33,4 +33,9 @@ Sample `/tunnels/tunnel_name.json`
             "mongo002.mydomain.com:27017"
         ]
     }
+
+Sample `myname.hosts`: name of file doesn't matter at all.
+
+     127.0.0.7		testing.com
+     74.125.224.33	bing.com
 
