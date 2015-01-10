@@ -23,7 +23,7 @@ Full bells
 	     -v `pwd`/tunnels:/tunnels \
 	     srhopkins/tomcat7:auto
 
-Sample `/tunnels/tunnel_name.json`: file name must end in `.json`
+Sample `/tunnels/tunnel_name.json` : file(s) name must end in `.json`
 
     {
         "jump_gateway": "jump.mydomain.com",
@@ -34,7 +34,7 @@ Sample `/tunnels/tunnel_name.json`: file name must end in `.json`
         ]
     }
 
-Sample `myname.hosts`: name of file doesn't matter at all.
+Sample `myname.hosts` : name of file(s) doesn't matter at all.
 
      127.0.0.7		testing.com
      74.125.224.33	bing.com
