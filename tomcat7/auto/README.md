@@ -11,4 +11,4 @@ tag: auto
  - docker-tunnels.py
 
 Simplest incantation
-> docker run -it -p 8080:8080 -d srhopkins/tomcat7:auto  
+> docker run -it -p 8080:8080 srhopkins/tomcat7:auto  
