@@ -9,7 +9,7 @@ RUN yum -y install openssh-clients dnsmasq && \
 	echo 'nohook resolv.conf' >> /etc/dhcpcd.conf
 
 # Install jdk and tomcat
-RUN yum -y install wget tar && \
+RUN yum -y install wget tar telnet && \
 	wget --no-cookies \
 	--no-check-certificate \
 	--header "Cookie: oraclelicense=accept-securebackup-cookie" \

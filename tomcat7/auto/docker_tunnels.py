@@ -31,7 +31,7 @@ def make_script(json_file, scriptname):
     if "opts" in tunnels_json.keys():
         tunnel_sh += 'ssh %(opts)s \\\n' % tunnels_json
     else:
-        tunnel_sh += 'ssh -M -S %s.socket -fnNT \\\n' % ''.join(json_file.split('.')[:-1])
+        tunnel_sh += 'ssh -M -S %s.socket -fnNT \\\n' % ''.join(json_file.split('.')[:-1]).replace('/tunnels/', '/root/')
         
     if "identity_file" in tunnels_json:
         tunnel_sh += "\t-i %(identity_file)s \\\n" % tunnels_json
