@@ -31,7 +31,7 @@ def make_script(json_file, scriptname):
     if "opts" in tunnels_json.keys():
         tunnel_sh += 'ssh %(opts)s \\\n' % tunnels_json
     else:
-        tunnel_sh += 'ssh -M -S %s.socket -fnNT \\\n' % ''.join(json_file.split('.')[:-1])
+        tunnel_sh += 'ssh -M -S %s.socket -fnNT \\\n' % ''.join(json_file.split('.')[:-1]).replace('/tunnels/', '/root/')
         
     if "identity_file" in tunnels_json:
         tunnel_sh += "\t-i %(identity_file)s \\\n" % tunnels_json
@@ -53,9 +53,8 @@ def make_script(json_file, scriptname):
             tunnel_sh += "\t-L %(lo)s:%(port)s:%(tunnel)s:%(port)s \\\n" % vars()
         hosts_append += "%(lo)s\t%(tunnel)s\n" % vars()
 
-    tunnel_sh += '\t%(user)s@%(jump_gateway)s' % tunnels_json
+    tunnel_sh += '\t%(user)s@%(jump_gateway)s\n' % tunnels_json
         
-    tunnel_sh += "\n"
     return tunnel_sh, hosts_append
 
 
