@@ -1,5 +1,7 @@
 FROM srhopkins/pyrun
 
+EXPOSE 8888
+
 RUN apt-get update && apt-get install -y build-essential
 
 RUN pip install ipython[notebook]
