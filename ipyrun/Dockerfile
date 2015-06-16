@@ -4,7 +4,7 @@ EXPOSE 8888
 
 RUN apt-get update && apt-get install -y build-essential pandoc
 
-RUN pip install ipython[notebook]
+RUN pip install ipython[notebook] functools32
 
 COPY init.sh /
 RUN chmod +x /init.sh
